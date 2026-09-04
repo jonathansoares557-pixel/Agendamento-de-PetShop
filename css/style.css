@@ -1,0 +1,533 @@
+/* ===================================================================
+   Agendamento de PetShop — Mundo Pet
+   Design tokens extraídos do Style Guide do Figma
+=================================================================== */
+
+:root {
+  /* Content */
+  --content-primary: #FFFFFF;
+  --content-secondary: #98959D;
+  --content-tertiary: #666666;
+  --content-brand: #9282FA;
+
+  /* Background */
+  --background-primary: #151515;
+  --background-secondary: #1E1E1E;
+  --background-tertiary: #23242C;
+  --background-brand: #9282FA;
+  --background-highlights: #BDB4FA;
+
+  /* Border */
+  --border-primary: #3E3C41;
+  --border-secondary: #86818C;
+  --border-brand: #9282FA;
+  --border-divisor: #353339;
+
+  /* Accent */
+  --accent-blue: #027DF0;
+  --accent-blue-light: #16487A;
+  --accent-yellow: #F0DC02;
+  --accent-yellow-light: #756E1B;
+  --accent-orange: #F09102;
+  --accent-orange-light: #75501B;
+
+  /* Type */
+  --font-title: 'Inter Tight', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--background-primary);
+  color: var(--content-primary);
+  font-family: var(--font-body);
+}
+
+body {
+  padding: 32px 24px 120px;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.project-label {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--content-tertiary);
+}
+
+.brand-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  background: rgba(146, 130, 250, 0.14);
+  color: var(--content-brand);
+  border: 1px solid var(--border-brand);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Agenda card ---------- */
+.agenda-card {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.agenda-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.agenda-heading h1 {
+  font-family: var(--font-title);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.agenda-heading p {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--content-secondary);
+  margin: 0;
+  max-width: 460px;
+}
+
+.date-picker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--content-primary);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .15s ease;
+}
+
+.date-picker:hover { border-color: var(--border-brand); }
+.date-picker svg:first-child { color: var(--content-brand); flex-shrink: 0; }
+.date-picker .chevron { color: var(--content-secondary); }
+
+.date-picker input[type="date"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  cursor: pointer;
+}
+
+/* ---------- Periods ---------- */
+.periods {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.period {
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-divisor);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.period-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.period-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-title);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.period-icon {
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.period-icon svg { width: 13px; height: 13px; }
+
+.period[data-period="manha"] .period-icon { background: var(--accent-blue-light); color: var(--accent-blue); }
+.period[data-period="tarde"] .period-icon  { background: var(--accent-orange-light); color: var(--accent-orange); }
+.period[data-period="noite"] .period-icon  { background: var(--accent-yellow-light); color: var(--accent-yellow); }
+
+.period-range {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--content-secondary);
+}
+
+.period-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-divisor);
+  animation: fadeIn .25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.row-time {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--content-secondary);
+}
+
+.row-who {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-who .pet-name { font-weight: 700; color: var(--content-primary); }
+.row-who .sep { color: var(--content-tertiary); margin: 0 4px; }
+.row-who .tutor-name { color: var(--content-secondary); }
+
+.row-service {
+  font-size: 14px;
+  color: var(--content-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-remove {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--content-tertiary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color .15s ease;
+}
+
+.row-remove:hover { color: #f05252; }
+
+.empty-state {
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--content-secondary);
+  font-size: 14px;
+  background: var(--background-tertiary);
+  border: 1px dashed var(--border-primary);
+  border-radius: 12px;
+}
+
+/* ---------- Floating action button ---------- */
+.fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--background-brand);
+  color: #fff;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(146, 130, 250, 0.35);
+  transition: background .15s ease, transform .15s ease;
+}
+
+.fab:hover { background: var(--background-highlights); transform: translateY(-1px); }
+.fab:active { transform: translateY(0); }
+
+/* ---------- Modal ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 12, 0.72);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 50;
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--background-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 28px;
+  transform: translateY(12px) scale(.98);
+  transition: transform .2s ease;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.modal-overlay.open .modal {
+  transform: translateY(0) scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-primary);
+  color: var(--content-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+
+.modal-close:hover { color: var(--content-primary); border-color: var(--border-brand); }
+
+.modal h2 {
+  font-family: var(--font-title);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  padding-right: 32px;
+}
+
+.modal-subtitle {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--content-secondary);
+  margin: 0 0 22px;
+}
+
+.field { margin-bottom: 16px; }
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color .15s ease;
+}
+
+.input-icon:focus-within { border-color: var(--border-brand); }
+.input-icon svg { color: var(--content-brand); flex-shrink: 0; }
+
+.input-icon input {
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--content-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  width: 100%;
+}
+
+.input-icon input::placeholder { color: var(--content-tertiary); }
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 76px;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--content-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color .15s ease;
+}
+
+textarea:focus { border-color: var(--border-brand); }
+textarea::placeholder { color: var(--content-tertiary); }
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: .6;
+  cursor: pointer;
+}
+
+.btn-primary {
+  width: 100%;
+  margin-top: 6px;
+  background: var(--background-brand);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background .15s ease;
+}
+
+.btn-primary:hover { background: var(--background-highlights); }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 16px);
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--background-tertiary);
+  border: 1px solid var(--border-brand);
+  color: var(--content-primary);
+  padding: 12px 16px 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 60;
+  max-width: calc(100vw - 32px);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.toast-action {
+  background: none;
+  border: 0;
+  color: var(--content-brand);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.toast-action:hover { color: var(--background-highlights); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  body { padding: 20px 14px 110px; }
+
+  .agenda-card { padding: 20px; border-radius: 14px; }
+
+  .row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "time remove"
+      "who who"
+      "service service";
+    row-gap: 4px;
+  }
+  .row-time { grid-area: time; }
+  .row-remove { grid-area: remove; justify-self: end; }
+  .row-who { grid-area: who; white-space: normal; }
+  .row-service { grid-area: service; white-space: normal; }
+
+  .field-row { grid-template-columns: 1fr; }
+
+  .fab {
+    left: 14px;
+    right: 14px;
+    justify-content: center;
+  }
+}
