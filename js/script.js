@@ -73,6 +73,14 @@
 
   const phoneInput = document.getElementById('phone');
   const formDateInput = document.getElementById('date');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalSubtitle = document.getElementById('modalSubtitle');
+  const submitBtn = document.getElementById('submitBtn');
+
+  /** id do agendamento em edição, ou null quando o modal está em modo "criar" */
+  let editingId = null;
+  /** elemento que tinha foco antes do modal abrir, para devolver o foco ao fechar */
+  let lastFocusedEl = null;
 
   /* ---------------- Utilidades ---------------- */
 
@@ -160,7 +168,10 @@
           <span class="row-time">${appt.time}</span>
           <span class="row-who"><span class="pet-name">${escapeHtml(appt.pet)}</span><span class="sep">/</span><span class="tutor-name">${escapeHtml(appt.tutor)}</span></span>
           <span class="row-service">${escapeHtml(appt.service)}</span>
-          <button type="button" class="row-remove" data-id="${appt.id}">Remover agendamento</button>
+          <span class="row-actions">
+            <button type="button" class="row-edit" data-id="${appt.id}">Editar</button>
+            <button type="button" class="row-remove" data-id="${appt.id}">Remover agendamento</button>
+          </span>
         `;
         rowsWrap.appendChild(row);
       });
@@ -196,36 +207,68 @@
     }
   });
 
-  /* ---------------- Remover agendamento ---------------- */
+  /* ---------------- Editar / remover agendamento ---------------- */
 
   periodsContainer.addEventListener('click', (event) => {
-    const btn = event.target.closest('.row-remove');
-    if (!btn) return;
+    const editBtn = event.target.closest('.row-edit');
+    if (editBtn) {
+      const appt = appointments.find(a => a.id === editBtn.dataset.id);
+      if (appt) openModal(appt, editBtn);
+      return;
+    }
 
-    const id = btn.dataset.id;
-    const appt = appointments.find(a => a.id === id);
-    if (!appt) return;
+    const removeBtn = event.target.closest('.row-remove');
+    if (removeBtn) {
+      const id = removeBtn.dataset.id;
+      const appt = appointments.find(a => a.id === id);
+      if (!appt) return;
 
-    appointments = appointments.filter(a => a.id !== id);
-    saveAppointments();
-    render();
+      appointments = appointments.filter(a => a.id !== id);
+      saveAppointments();
+      render();
 
-    showToast(`Agendamento de ${appt.pet} removido.`, {
-      actionLabel: 'Desfazer',
-      duration: 5000,
-      onAction: () => {
-        appointments.push(appt);
-        saveAppointments();
-        render();
-      }
-    });
+      showToast(`Agendamento de ${appt.pet} removido.`, {
+        actionLabel: 'Desfazer',
+        duration: 5000,
+        onAction: () => {
+          appointments.push(appt);
+          saveAppointments();
+          render();
+        }
+      });
+    }
   });
 
   /* ---------------- Modal: abrir/fechar ---------------- */
 
-  function openModal() {
+  /**
+   * Abre o modal. Sem argumento: modo "criar novo agendamento".
+   * Passando um agendamento existente: modo "editar" (pré-preenche o formulário).
+   */
+  function openModal(appt, triggerEl) {
+    lastFocusedEl = triggerEl || document.activeElement;
     appointmentForm.reset();
-    formDateInput.value = selectedDate;
+
+    if (appt) {
+      editingId = appt.id;
+      modalTitle.textContent = 'Editar agendamento';
+      modalSubtitle.textContent = 'Atualize os dados do agendamento:';
+      submitBtn.textContent = 'SALVAR ALTERAÇÕES';
+
+      appointmentForm.tutor.value = appt.tutor;
+      appointmentForm.pet.value = appt.pet;
+      appointmentForm.phone.value = appt.phone;
+      appointmentForm.service.value = appt.service;
+      formDateInput.value = appt.date;
+      appointmentForm.time.value = appt.time;
+    } else {
+      editingId = null;
+      modalTitle.textContent = 'Agende um atendimento';
+      modalSubtitle.textContent = 'Preencha os dados do cliente para realizar o agendamento:';
+      submitBtn.textContent = 'AGENDAR';
+      formDateInput.value = selectedDate;
+    }
+
     modalOverlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     setTimeout(() => document.getElementById('tutor').focus(), 150);
@@ -234,9 +277,14 @@
   function closeModal() {
     modalOverlay.classList.remove('open');
     document.body.style.overflow = '';
+    editingId = null;
+    if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+      lastFocusedEl.focus();
+    }
+    lastFocusedEl = null;
   }
 
-  openModalBtn.addEventListener('click', openModal);
+  openModalBtn.addEventListener('click', () => openModal(null, openModalBtn));
   closeModalBtn.addEventListener('click', closeModal);
 
   modalOverlay.addEventListener('click', (event) => {
@@ -278,6 +326,18 @@
 
     if (!tutor || !pet || !phone || !service || !date || !time) {
       showToast('Preencha todos os campos para agendar.');
+      return;
+    }
+
+    if (editingId) {
+      const index = appointments.findIndex(a => a.id === editingId);
+      if (index !== -1) {
+        appointments[index] = { ...appointments[index], date, time, pet, tutor, phone, service };
+      }
+      saveAppointments();
+      closeModal();
+      setSelectedDate(date);
+      showToast(`Agendamento de ${pet} atualizado com sucesso!`);
       return;
     }
 

@@ -29,12 +29,12 @@
           <p>Aqui você pode ver todos os clientes e serviços agendados para hoje.</p>
         </div>
 
-        <div class="date-picker" id="datePickerBtn">
+        <label class="date-picker" id="datePickerBtn" for="dateInput">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
           <span id="selectedDateLabel">10/01/2024</span>
           <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           <input type="date" id="dateInput" aria-label="Selecionar data">
-        </div>
+        </label>
       </div>
 
       <div id="periodsContainer" class="periods"></div>
@@ -46,7 +46,7 @@
     NOVO AGENDAMENTO
   </button>
 
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
@@ -56,7 +56,7 @@
       </button>
 
       <h2 id="modalTitle">Agende um atendimento</h2>
-      <p class="modal-subtitle">Preencha os dados do cliente para realizar o agendamento:</p>
+      <p class="modal-subtitle" id="modalSubtitle">Preencha os dados do cliente para realizar o agendamento:</p>
 
       <form id="appointmentForm" novalidate>
         <div class="field">
@@ -105,7 +105,7 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-primary">AGENDAR</button>
+        <button type="submit" class="btn-primary" id="submitBtn">AGENDAR</button>
       </form>
     </div>
   </div>
